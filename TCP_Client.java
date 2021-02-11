@@ -19,7 +19,7 @@ public class TCP_Client {
     // Attributes used for file transfers
     public DataInputStream fileIn;
     Scanner dataInput;
-    public static int BYTE_SIZE = 4*1024;
+    public static int BYTE_SIZE = 1024;
 
     /**
     * Handles all client side communication with the server
@@ -153,10 +153,10 @@ public class TCP_Client {
                 x++;
                 System.out.println(x);
                 System.out.println("A: " + size);
-                System.out.println("B: " + Math.min(BYTE_SIZE, size) + "\n");
-                // System.out.println("A");
+                System.out.println("B: " + Math.min(BYTE_SIZE, size));
+                System.out.println("C");
                 this.fileIn.readFully(buffer, 0, (int) Math.min(BYTE_SIZE, size));
-                // System.out.println("B");
+                System.out.println("D\n");
                 fileOutputStream.write(buffer);
                 // System.out.println("C");
                 size -= BYTE_SIZE;      // read upto file size
@@ -273,6 +273,8 @@ public class TCP_Client {
         // Gets preferred name from the user
         this.name = this.get_input("You");
         this.write_message(this.name);
+
+        this.name = (this.name.equals("") ? "You" : this.name);
 
         // If the server is at capacity the client will stall here until 
         // there is an available connection

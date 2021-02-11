@@ -18,7 +18,7 @@ class Client extends Thread{
 
     // Attributes used for file transfers
     public DataOutputStream fileOut;
-    public static int BYTE_SIZE = 4*1024;
+    public static int BYTE_SIZE = 1024;
     File folder = new File("./data");
     File[] listOfFiles;
 
@@ -245,7 +245,13 @@ class Client extends Thread{
     
         // Gets the preferred name from the client
         this.name = this.get_message();
-        this.write_message("Server> Ack: Your preferred name of " + this.name + " was saved");
+        
+        if (this.name.equals("")){
+            this.write_message("Server> Ack: No preferred name was given");
+            this.name = this.id;
+        } else {
+            this.write_message("Server> Ack: Your preferred name of " + this.name + " was saved");
+        }
         
         System.out.printf("Server> %s --> %s\n", this.id, this.name);
 
