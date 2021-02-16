@@ -108,7 +108,7 @@ class TCP_Server{
 
 
     public static void main(String[] args){
-        new TCP_Server(1, 5000);
+        new TCP_Server(3, 5069);
     }
 
 }

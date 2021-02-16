@@ -140,32 +140,32 @@ public class TCP_Client {
     * @param  fileName  the name of the file the client wants
     */ 
     public void process_file(String fileName){
-        // TO-DO
+        // Gets the file size from the server
+        long size = Long.parseLong(this.get_message());
+
+        // Handshake with the server to make sure that BufferReader is empty
+        this.write_message("Start transfer");
+
+        // Reads in file from the server
         try {
-            // int bytes = 0;
             FileOutputStream fileOutputStream = new FileOutputStream(fileName);
-
-            long size = Long.parseLong(this.get_message());     // read file size
-            System.out.println("File Size " + size);
+            // File buffer
             byte[] buffer = new byte[BYTE_SIZE];
-            int x=0;
+            
+            // Iterates until the entire file is received from the server
             while (size > 0) {
-                x++;
-                System.out.println(x);
-                System.out.println("A: " + size);
-                System.out.println("B: " + Math.min(BYTE_SIZE, size));
-                System.out.println("C");
+                // Reads in exactly 1KB of data unless it's the less data chunk
                 this.fileIn.readFully(buffer, 0, (int) Math.min(BYTE_SIZE, size));
-                System.out.println("D\n");
+                
+                // Writes data to the file
                 fileOutputStream.write(buffer);
-                // System.out.println("C");
-                size -= BYTE_SIZE;      // read upto file size
+                size -= BYTE_SIZE;
             }
-
-            System.out.println("Got file");
-            this.write_message("done");
+            // Closes the output stream
             fileOutputStream.close();
+
         } catch (Exception e) {
+            // Writes error report to client if the the couldn't be written to
             System.out.println("Error: Couldn't write file");
         }
     }
@@ -319,7 +319,7 @@ public class TCP_Client {
     }
 
     public static void main(String[] args){
-        new TCP_Client("127.0.0.1", 5000);
+        new TCP_Client("localhost", 5069);
     }
     
 }

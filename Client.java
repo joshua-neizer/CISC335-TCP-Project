@@ -156,31 +156,29 @@ class Client extends Thread{
             this.write_message(file.getName());
             System.out.printf("%s> Sending file %s\n", this.id, file.getName());
 
+            // Sends file size
+            this.write_message(String.valueOf(file.length()));
+
+            // Handshake with the server to make sure that client's BufferReader is empty
+            this.get_message();
+
+            // Instantiates file transfer variables
             int bytes = 0;
             FileInputStream fileInputStream = new FileInputStream(file);
-            System.out.println("File Size " + file.length());
-            // send file size
-            // this.fileOut.writeLong(file.length());  
-            this.write_message(String.valueOf(file.length()));
-            // break file into chunks
             byte[] buffer = new byte[BYTE_SIZE];
-            int x = 0;
+
+            // Iterates until the entire file is sent to the client
             while ((bytes = fileInputStream.read(buffer)) != -1){
-                x ++;
-                // System.out.println(buffer);
+                // Writes the current file chunk from the buffer to the client
                 this.fileOut.write(buffer, 0, bytes);
                 this.fileOut.flush();
             }
-            System.out.println(x);
-            // TimeUnit.SECONDS.sleep(2);
-            this.get_message();
+            // Closes the file input stream
             fileInputStream.close();
             System.out.println("Server> Done sending file");
             
-            this.write_message("Server> Successfully sent " + file.getName());
-
-            
-            
+            // Sends acknowledgement message to the client
+            this.write_message("Server> Successfully sent " + file.getName());            
         } catch (Exception e) {
             // If the user wants an invalid file number, or the file can't send
             // The server responds with an error to the client
