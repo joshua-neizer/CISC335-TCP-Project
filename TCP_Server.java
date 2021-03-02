@@ -1,5 +1,6 @@
 import java.net.*;
 import java.util.concurrent.TimeUnit;
+import java.util.ArrayList;
 
 
 // The Sever program for the TCP Network
@@ -9,6 +10,7 @@ class TCP_Server{
     public ServerSocket serverSocket;
     public Socket socket;
     private Client[] Clients;
+    public ArrayList<String[]> connectionLog;
 
     /**
     * Runs an infinite loop waiting for connections to start and end.
@@ -21,6 +23,7 @@ class TCP_Server{
         System.out.println("Starting Up...\n");
         this.maxClients = mc;
         this.Clients = new Client [mc];
+        this.connectionLog = new ArrayList<String[]>();
 
         // Creates the socket for the server 
         try {
@@ -81,6 +84,8 @@ class TCP_Server{
                     // Previous thread is stopped
                     this.Clients [i].stop();
 
+                    // Adds the connection log to ongoing log list
+                    this.connectionLog.add(this.Clients[i].log);
                     System.out.printf("Server> Client#0%d successfully closed connection\n", i+1);
                     System.out.printf("Server> Waiting for new Client#0%d\n", i+1);
 

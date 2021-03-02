@@ -1,6 +1,7 @@
 import java.io.*;
 import java.net.*;
-// import java.util.concurrent.TimeUnit;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 
 // TCP Server thread that interacts with the client
 class Client extends Thread{
@@ -15,6 +16,7 @@ class Client extends Thread{
     public String id;
     public Boolean active;
     public int errors;
+    public String[] log;
 
     // Attributes used for file transfers
     public DataOutputStream fileOut;
@@ -44,6 +46,10 @@ class Client extends Thread{
 
         // Initializes variables, this is done only if connection is established
         this.id = "Client#0" + String.valueOf(id+1);
+        // Initializes the log with the client id and the connection establishment time
+        this.log = new String[]{this.id, 
+                                "Connection Established Date & Time: " + new SimpleDateFormat("yyyy.MM.dd HH:mm:ss").format(new Date()), 
+                                null};
         this.listOfFiles = folder.listFiles();
     }
 
@@ -219,6 +225,9 @@ class Client extends Thread{
     * Server closes all connections and resets variables
     */ 
     public void exit(){
+        // Updates terminating time to the log
+        this.log[2] = "Connection Terminated Date & Time: " + new SimpleDateFormat("yyyy.MM.dd HH:mm:ss").format(new Date());
+        
         try{
             this.out.close();
             this.in.close();
